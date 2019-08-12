@@ -7,8 +7,8 @@ class Operations extends Component {
         super()
         this.state = {
             amount: Number,
-            vendor: null,
-            category: null
+            vendor: String,
+            category: String
         }
     }
 

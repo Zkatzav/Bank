@@ -5,18 +5,14 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { async } from 'q';
 import Operations from './components/Operations'
 import Transactions from './components/Transactions';
+import axios from 'axios'
 
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      operations : [
-        { amount: 3200, vendor: "Elevation", category: "Salary" },
-        { amount: -7, vendor: "Runescape", category: "Entertainment" },
-        { amount: -20, vendor: "Subway", category: "Food" },
-        { amount: -98, vendor: "La Baguetterie", category: "Food" }
-      ]
+      operations : []
     }
   }
 
@@ -27,11 +23,19 @@ class App extends Component {
     return balance
   }
   
-  getNewOperations = newOperations => {
-    let operations = [...this.state.operations]
-    operations.push(newOperations)
+  getNewOperations = async newOperations => {
+      await axios.post('http://localhost:4200/transaction', newOperations)
+      this.getTransactions()
+  }
+
+  async getTransactions() {
+    let operations = await axios.get('http://localhost:4200/transactions')
+    operations = operations.data
     this.setState({ operations })
-    this.componentDidMount()  
+  }
+
+  async componentDidMount(){
+    this.getTransactions()
   }
 
   render(){
